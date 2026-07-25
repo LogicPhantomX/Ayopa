@@ -12,7 +12,7 @@
     }
   ],
   "routes": [
-    { "src": "/v1/(.*)", "dest": "apps/api/api/index.ts" },
+    { "src": "/v1/(.*)", "dest": "apps/api/api/api-index.ts" },
     { "src": "/(.*)", "dest": "apps/web/dist/$1" }
   ]
 }
