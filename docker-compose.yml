@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: agora-postgres
+    environment:
+      POSTGRES_DB: agora
+      POSTGRES_USER: agora
+      POSTGRES_PASSWORD: agora
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: agora-redis
+    ports:
+      - "6379:6379"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agora-api
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: agora
+      DB_PASSWORD: agora
+      DB_NAME: agora
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: change-me-in-production
+      JWT_TTL: 3600
+      SWAGGER_ENABLED: "true"
+    ports:
+      - "3000:3000"
+    command: sh -c "npm run migration:run --workspace apps/api && npm run start --workspace apps/api"
+
+volumes:
+  postgres_data:

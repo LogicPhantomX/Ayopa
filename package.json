@@ -1,0 +1,32 @@
+{
+    "name": "agora-marketplace",
+    "private": true,
+    "version": "0.1.0",
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ],
+    "scripts": {
+        "build": "npm run build --workspace apps/api",
+        "start": "npm run start --workspace apps/api",
+        "start:dev": "npm run start:dev --workspace apps/api",
+        "dev": "npm run start:dev --workspace apps/api",
+        "dev:web": "npm run dev --workspace apps/web",
+        "dev:all": "concurrently \"npm run start:dev --workspace apps/api\" \"npm run dev --workspace apps/web\"",
+        "typeorm": "npm run typeorm --workspace apps/api",
+        "migration:generate": "npm run migration:generate --workspace apps/api",
+        "migration:run": "npm run migration:run --workspace apps/api",
+        "migration:revert": "npm run migration:revert --workspace apps/api",
+        "docker:up": "docker compose up --build",
+        "docker:down": "docker compose down"
+    },
+    "devDependencies": {
+        "@types/node": "^22.10.1",
+        "concurrently": "^9.0.0",
+        "rimraf": "^6.0.1",
+        "ts-node": "^10.9.2",
+        "tsconfig-paths": "^3.1.0",
+        "typeorm-ts-node-commonjs": "^0.3.20",
+        "typescript": "^5.6.3"
+    }
+}
