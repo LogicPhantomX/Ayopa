@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+/*
+  AYOPÁ design tokens — restored to the original dark / gold identity.
+
+  The marketplace screens (Home, Checkout, ListingCard, CartSheet, etc.)
+  are written against the semantic --color-paper / --color-ink /
+  --color-brand-* / --color-trust-* / --color-caution-* tokens below, so
+  the palette can be swapped here without touching any component file.
+  Values are mapped 1:1 onto the original zinc/emerald(gold) scale.
+*/
+@theme {
+  --font-sans: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-serif: "Georgia", Garamond, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* ---- Original dark neutral scale ---- */
+  --color-black: #080808;
+  --color-zinc-950: #121212;
+  --color-zinc-900: #161616;
+  --color-zinc-850: #1C1C1C;
+  --color-zinc-800: #1A1A1A;
+  --color-zinc-700: #262626;
+  --color-zinc-650: #333333;
+  --color-zinc-600: #404040;
+  --color-zinc-500: #8C8C8C;
+  --color-zinc-400: #CCCCCC;
+  --color-zinc-300: #E5E5E5;
+  --color-zinc-200: #F5F5F5;
+  --color-zinc-100: #FFFFFF;
+
+  /* ---- "emerald" is repurposed as the gold brand accent, as in the original ---- */
+  --color-emerald-500: #D4A017;
+  --color-emerald-600: #B58410;
+  --color-emerald-400: #E2B63E;
+  --color-emerald-300: #F1D277;
+  --color-emerald-950: #15120a;
+  --color-emerald-900: #1C170D;
+  --color-emerald-800: #2C2210;
+
+  --color-gold: #D4A017;
+  --color-gold-hover: #B58410;
+  --color-gold-light: #E2B63E;
+  --color-gold-dark: #1C170D;
+
+  /* ---- Semantic tokens used by the marketplace screens, mapped onto the
+         palette above so they render as the same dark/gold theme ---- */
+  --color-paper: var(--color-black);
+  --color-paper-dim: #050505;
+  --color-surface: var(--color-zinc-950);
+  --color-surface-sunken: var(--color-zinc-900);
+  --color-line: var(--color-zinc-800);
+  --color-line-strong: var(--color-zinc-700);
+
+  --color-ink: var(--color-zinc-100);
+  --color-ink-muted: var(--color-zinc-500);
+  --color-ink-faint: var(--color-zinc-600);
+  --color-ink-on-accent: var(--color-black);
+
+  --color-brand-50: var(--color-emerald-900);
+  --color-brand-100: var(--color-emerald-800);
+  --color-brand-300: var(--color-emerald-400);
+  --color-brand-500: var(--color-gold);
+  --color-brand-600: var(--color-gold-hover);
+  --color-brand-700: var(--color-emerald-300);
+  --color-brand-900: var(--color-emerald-950);
+
+  /* ---- Trust / verification — original had no separate green, so trust
+         stays in the gold family for consistency ---- */
+  --color-trust-100: var(--color-emerald-900);
+  --color-trust-400: var(--color-emerald-400);
+  --color-trust-500: var(--color-gold);
+  --color-trust-600: var(--color-gold-hover);
+
+  /* ---- Caution / dispute — original used Tailwind's default rose scale ---- */
+  --color-caution-100: #4C0519;
+  --color-caution-500: #fb7185;
+  --color-caution-600: #e11d48;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 999px;
+
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.45);
+  --shadow-lifted: 0 4px 10px rgba(0, 0, 0, 0.3), 0 20px 40px -16px rgba(0, 0, 0, 0.55);
+  --shadow-sheet: 0 -8px 32px -8px rgba(0, 0, 0, 0.6);
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-black);
+  color: var(--color-zinc-100);
+}
+
+/* Custom premium scrollbar styling */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #080808;
+}
+::-webkit-scrollbar-thumb {
+  background: #1A1A1A;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #333333;
+}
+
+/* Visible, deliberate focus ring */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

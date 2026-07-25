@@ -1,0 +1,6 @@
+{
+  "name": "Ayopá",
+  "description": "Africa's most trusted and intelligent commerce ecosystem, offering escrow, secure payments, logistics tracking, and role-based client workspaces.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
