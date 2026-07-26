@@ -21,8 +21,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
-            // RS256: validate with the public key.
-            secretOrKey: configService.get<string>('JWT_PUBLIC_KEY'),
+            // RS256: validate with the public key. Handle keys pasted into
+            // env var UIs with literal "\n" instead of real line breaks.
+            secretOrKey: configService.get<string>('JWT_PUBLIC_KEY', '').replace(/\\n/g, '\n'),
             algorithms: ['RS256'],
         });
     }
