@@ -3,9 +3,18 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { NobleCryptoPlugin, ScureBase32Plugin, TOTP } from 'otplib';
+// Deliberately NOT importing from the top-level 'otplib' package: its barrel
+// file unconditionally requires ALL of its plugins internally the moment
+// anything is imported from it — including @otplib/plugin-base32-scure,
+// whose @scure/base dependency is pure ESM and crashes under Vercel's
+// CommonJS bundling (ERR_REQUIRE_ESM). Importing directly from the specific
+// sub-packages below avoids that entirely, regardless of which named export
+// we actually use.
+import { NobleCryptoPlugin } from '@otplib/plugin-crypto-noble';
+import { TOTP } from '@otplib/totp';
 import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
+import { CjsSafeBase32Plugin } from './cjs-safe-base32';
 import { RefreshTokenStore } from './refresh-token-store';
 
 const MAX_FAILED_ATTEMPTS = 3;
@@ -22,7 +31,7 @@ export class AdminAuthService {
         private readonly jwtService: JwtService,
         private readonly refreshTokenStore: RefreshTokenStore,
     ) {
-        this.totp = new TOTP({ crypto: new NobleCryptoPlugin(), base32: new ScureBase32Plugin() });
+        this.totp = new TOTP({ crypto: new NobleCryptoPlugin(), base32: CjsSafeBase32Plugin });
     }
 
     async loginAdmin(email: string, password: string) {
