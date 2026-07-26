@@ -3,18 +3,18 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-// Deliberately NOT importing from the top-level 'otplib' package: its barrel
-// file unconditionally requires ALL of its plugins internally the moment
-// anything is imported from it — including @otplib/plugin-base32-scure,
-// whose @scure/base dependency is pure ESM and crashes under Vercel's
-// CommonJS bundling (ERR_REQUIRE_ESM). Importing directly from the specific
-// sub-packages below avoids that entirely, regardless of which named export
-// we actually use.
-import { NobleCryptoPlugin } from '@otplib/plugin-crypto-noble';
+// Deliberately NOT importing from the top-level 'otplib' package, and
+// deliberately NOT using either of its official plugins:
+// - @otplib/plugin-base32-scure pulls in @scure/base (pure ESM)
+// - @otplib/plugin-crypto-noble pulls in @noble/hashes (pure ESM)
+// Both crash under Vercel's CommonJS bundling with ERR_REQUIRE_ESM. Our own
+// plugins below use only Node's built-in crypto module and plain JS, so
+// there's nothing that can ever hit that conflict.
 import { TOTP } from '@otplib/totp';
 import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { CjsSafeBase32Plugin } from './cjs-safe-base32';
+import { NodeCryptoPlugin } from './node-crypto-plugin';
 import { RefreshTokenStore } from './refresh-token-store';
 
 const MAX_FAILED_ATTEMPTS = 3;
@@ -31,7 +31,7 @@ export class AdminAuthService {
         private readonly jwtService: JwtService,
         private readonly refreshTokenStore: RefreshTokenStore,
     ) {
-        this.totp = new TOTP({ crypto: new NobleCryptoPlugin(), base32: CjsSafeBase32Plugin });
+        this.totp = new TOTP({ crypto: NodeCryptoPlugin, base32: CjsSafeBase32Plugin });
     }
 
     async loginAdmin(email: string, password: string) {
