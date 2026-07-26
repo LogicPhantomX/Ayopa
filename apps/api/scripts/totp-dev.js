@@ -11,7 +11,30 @@
  * Requires otplib (already a dependency of apps/api).
  */
 
-const { TOTP, NobleCryptoPlugin } = require('otplib');
+const { TOTP } = require('@otplib/totp');
+const nodeCrypto = require('crypto');
+
+// Same native-crypto plugin used in src/modules/auth/node-crypto-plugin.ts —
+// kept inline here since this is a standalone script. NobleCryptoPlugin
+// (otplib's default) pulls in @noble/hashes, a pure-ESM package that
+// crashes under Vercel's CommonJS bundling; this avoids that entirely.
+const cryptoPlugin = {
+    name: 'node-native',
+    hmac(algorithm, key, data) {
+        return new Uint8Array(
+            nodeCrypto.createHmac(algorithm, Buffer.from(key)).update(Buffer.from(data)).digest()
+        );
+    },
+    randomBytes(length) {
+        return new Uint8Array(nodeCrypto.randomBytes(length));
+    },
+    constantTimeEqual(a, b) {
+        const bufA = Buffer.from(a);
+        const bufB = Buffer.from(b);
+        if (bufA.length !== bufB.length) return false;
+        return nodeCrypto.timingSafeEqual(bufA, bufB);
+    },
+};
 
 // Same dependency-free base32 implementation used in
 // src/modules/auth/cjs-safe-base32.ts — kept inline here since this is a
@@ -50,7 +73,7 @@ if (!secret) {
     process.exit(1);
 }
 
-const totp = new TOTP({ crypto: new NobleCryptoPlugin(), base32: base32Plugin });
+const totp = new TOTP({ crypto: cryptoPlugin, base32: base32Plugin });
 
 async function printCode() {
     const code = await totp.generate({ secret });
