@@ -1,59 +1,50 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { AuthService } from '../auth.service';
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { EmailModule } from '../email/email.module';
+import { SmsModule } from '../sms/sms.module';
+import { User } from '../users/entities/user.entity';
+import { AdminAuthController } from './admin-auth.controller';
+import { AdminAuthService } from './admin-auth.service';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { OtpStore } from './otp-store';
+import { RefreshTokenStore } from './refresh-token-store';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
-interface JwtPayload {
-    sub: string;
-    email: string | null;
-    role: string;
-    iat: number;
-    exp: number;
-}
-
-@Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor(
-        private readonly configService: ConfigService,
-        private readonly authService: AuthService,
-    ) {
-        super({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            ignoreExpiration: false,
-            // RS256: validate with the public key. Handle keys pasted into
-            // env var UIs with literal "\n" instead of real line breaks.
-            secretOrKey: configService.get<string>('JWT_PUBLIC_KEY', '').replace(/\\n/g, '\n'),
-            algorithms: ['RS256'],
-        });
-    }
-
-    async validate(payload: JwtPayload) {
-        const user = await this.authService.validateUser(payload.sub);
-
-        // Deactivated accounts are always rejected.
-        if (!user || !user.isActive) {
-            throw new UnauthorizedException();
-        }
-
-        // Locked accounts are rejected on EVERY request, not just at login.
-        // lockedUntil is set by admin-auth lockout (failed TOTP/password attempts)
-        // or by any future ban mechanism that sets a future timestamp.
-        if (user.lockedUntil && user.lockedUntil > new Date()) {
-            throw new UnauthorizedException('Account is temporarily locked.');
-        }
-
-        // Provisional accounts are allowed through JwtStrategy — they have a
-        // legitimate token issued by verifyPhoneOtp. Enforcement of "full
-        // profile required" happens at the endpoint level via ProvisionalGuard
-        // / @RequireFullProfile(), NOT here.  Blocking provisional users here
-        // would prevent them from ever reaching POST /auth/profile/setup.
-        return {
-            id: user.id,
-            email: user.email,
-            role: user.role,           // 'provisional' | 'buyer' | 'seller' | 'admin'
-            fullName: user.fullName,
-            isProvisional: user.role === 'provisional',
-        };
-    }
-}
+@Module({
+    imports: [
+        ConfigModule,
+        TypeOrmModule.forFeature([User]),
+        JwtModule.registerAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => ({
+                // If the key was pasted into an env var UI as a single line,
+                // its real newlines can end up as literal "\n" (backslash-n)
+                // characters instead of actual line breaks. RS256 key parsing
+                // fails silently on that — this makes it work either way.
+                privateKey: configService
+                    .get<string>('JWT_PRIVATE_KEY', '')
+                    .replace(/\\n/g, '\n'),
+                publicKey: configService
+                    .get<string>('JWT_PUBLIC_KEY', '')
+                    .replace(/\\n/g, '\n'),
+                signOptions: {
+                    algorithm: 'RS256',
+                    expiresIn: configService.get<string>('JWT_TTL', '15m') as any,
+                },
+                verifyOptions: {
+                    algorithms: ['RS256'],
+                },
+            }),
+        }),
+        SmsModule,
+        EmailModule,
+    ],
+    controllers: [AuthController, AdminAuthController],
+    providers: [AuthService, AdminAuthService, JwtStrategy, OtpStore, RefreshTokenStore],
+    exports: [AuthService, AdminAuthService],
+})
+export class AuthModule {}
