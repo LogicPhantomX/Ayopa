@@ -3,11 +3,11 @@ version: "3.9"
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: agora-postgres
+    container_name: ayopa-postgres
     environment:
-      POSTGRES_DB: agora
-      POSTGRES_USER: agora
-      POSTGRES_PASSWORD: agora
+      POSTGRES_DB: ayopa
+      POSTGRES_USER: ayopa
+      POSTGRES_PASSWORD: ayopa
     ports:
       - "5432:5432"
     volumes:
@@ -15,7 +15,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: agora-redis
+    container_name: ayopa-redis
     ports:
       - "6379:6379"
 
@@ -23,7 +23,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: agora-api
+    container_name: ayopa-api
     depends_on:
       - postgres
       - redis
@@ -34,9 +34,9 @@ services:
       PORT: 3000
       DB_HOST: postgres
       DB_PORT: 5432
-      DB_USERNAME: agora
-      DB_PASSWORD: agora
-      DB_NAME: agora
+      DB_USERNAME: ayopa
+      DB_PASSWORD: ayopa
+      DB_NAME: ayopa
       REDIS_HOST: redis
       REDIS_PORT: 6379
       JWT_SECRET: change-me-in-production
