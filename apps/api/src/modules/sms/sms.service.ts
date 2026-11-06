@@ -7,7 +7,7 @@ import { ISmsProvider } from './sms.interfaces';
  *
  * Required env vars:
  *   SMS_API_KEY   — Termii API key
- *   SMS_SENDER_ID — Sender ID registered on Termii dashboard (default: "Agora")
+ *   SMS_SENDER_ID — Sender ID registered on Termii dashboard (default: "Ayopá")
  *
  * If SMS_API_KEY is absent the service falls back to a log-only stub so the
  * rest of the application can still start. Flag is clearly surfaced at startup.
@@ -23,7 +23,7 @@ export class SmsService implements ISmsProvider {
 
     constructor(private readonly configService: ConfigService) {
         this.apiKey = this.configService.get<string>('SMS_API_KEY');
-        this.senderId = this.configService.get<string>('SMS_SENDER_ID', 'Agora');
+        this.senderId = this.configService.get<string>('SMS_SENDER_ID', 'Ayopá');
 
         if (!this.apiKey) {
             this.logger.warn(
@@ -85,7 +85,7 @@ export class SmsService implements ISmsProvider {
      */
     async sendOtp(phone: string, code: string, expiresInMinutes = 5): Promise<void> {
         const message =
-            `Your Agora verification code is ${code}. ` +
+            `Your Ayopá verification code is ${code}. ` +
             `It expires in ${expiresInMinutes} minutes. Do not share it with anyone.`;
         await this.send(phone, message);
     }
