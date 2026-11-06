@@ -11,16 +11,16 @@ export function getDatabaseConfig(configService: ConfigService): TypeOrmModuleOp
     // instead. Managed Postgres providers (Neon, Supabase, Vercel Postgres) hand
     // you a single connection string, not five discrete vars — without this,
     // setting only DATABASE_URL would pass the startup check but silently try
-    // to connect to localhost:5432/agora instead of the real database.
+    // to connect to localhost:5432/ayopa instead of the real database.
     const base: TypeOrmModuleOptions = databaseUrl
         ? { type: 'postgres', url: databaseUrl }
         : {
             type: 'postgres',
             host: configService.get<string>('DB_HOST', 'localhost'),
             port: configService.get<number>('DB_PORT', 5432),
-            username: configService.get<string>('DB_USERNAME', 'agora'),
-            password: configService.get<string>('DB_PASSWORD', 'agora'),
-            database: configService.get<string>('DB_NAME', 'agora'),
+            username: configService.get<string>('DB_USERNAME', 'ayopa'),
+            password: configService.get<string>('DB_PASSWORD', 'ayopa'),
+            database: configService.get<string>('DB_NAME', 'ayopa'),
         };
 
     const isLocalHost = !databaseUrl && configService.get<string>('DB_HOST', 'localhost') === 'localhost';

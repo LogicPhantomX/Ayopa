@@ -23,7 +23,7 @@ export class HealthController {
 
         return {
             status: 'ok',
-            service: 'agora-api',
+            service: 'ayopa-api',
             database,
             timestamp: new Date().toISOString(),
         };
