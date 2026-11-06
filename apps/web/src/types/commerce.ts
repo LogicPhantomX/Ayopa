@@ -20,6 +20,7 @@ export interface CommodityProduct {
   sellerRating: number;
   description: string;
   imageColor: string; // Tailwind color class for premium stylized background
+  imageUrl?: string;
 }
 
 export type EscrowStatus =

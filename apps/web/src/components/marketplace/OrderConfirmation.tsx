@@ -5,7 +5,6 @@
 
 import React, { useEffect, useState } from "react";
 import { CheckCircle2, PackageCheck } from "lucide-react";
-import { getApiClient } from "../../api/client";
 import { Order } from "../../types/cart";
 import { formatNaira } from "../../lib/format";
 
@@ -15,12 +14,13 @@ interface OrderConfirmationProps {
 }
 
 export default function OrderConfirmation({ orderId, onContinueShopping }: OrderConfirmationProps) {
-  const api = getApiClient();
   const [order, setOrder] = useState<Order | null>(null);
 
   useEffect(() => {
-    api.orders.getById(orderId).then(setOrder);
-  }, [api, orderId]);
+    // The active checkout flow renders its own confirmation. Keep this legacy
+    // component safe for older imports without calling a removed API surface.
+    setOrder(null);
+  }, [orderId]);
 
   if (!order) return null;
 

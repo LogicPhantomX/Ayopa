@@ -96,7 +96,7 @@ export default function BuyerWorkspace({
       id: `esc-${Math.floor(100 + Math.random() * 900)}`,
       productId: selectedProductForEscrow.id,
       productName: selectedProductForEscrow.name,
-      buyerName: "Chocolates d'Europe (Zürich)", // Simulated Buyer profile
+      buyerName: "Lagos Foods & Hospitality Ltd.", // Simulated Buyer profile
       sellerName: selectedProductForEscrow.sellerName,
       quantity: escrowQuantity,
       unitPrice: selectedProductForEscrow.pricePerTon,
@@ -106,7 +106,7 @@ export default function BuyerWorkspace({
       totalAmount,
       status: "Awaiting Funding",
       origin: selectedProductForEscrow.origin,
-      destination: shippingDestination || "Port of Durban (South Africa)",
+      destination: shippingDestination || "Apapa Port, Lagos",
       createdAt: new Date().toISOString()
     };
 
@@ -250,7 +250,7 @@ export default function BuyerWorkspace({
                     </div>
 
                     {/* Product visual box */}
-                    <div className={`h-28 rounded-lg mb-3 bg-gradient-to-br ${prod.imageColor} p-3 flex flex-col justify-between overflow-hidden relative border border-zinc-900/60`}>
+                    <div className={`h-28 rounded-lg mb-3 bg-gradient-to-br ${prod.imageColor} p-3 flex flex-col justify-between overflow-hidden relative border border-zinc-900/60`} style={prod.imageUrl ? { backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.78)), url(${prod.imageUrl})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}>
                       <span className="font-mono text-[10px] bg-black/50 text-emerald-300 backdrop-blur-sm border border-emerald-950/40 px-2 py-0.5 rounded self-start font-bold uppercase tracking-widest">
                         {prod.grade}
                       </span>
@@ -702,7 +702,7 @@ export default function BuyerWorkspace({
                     id="input-shipping-dest"
                     type="text"
                     required
-                    placeholder="e.g., Port of Durban, South Africa"
+                    placeholder="e.g., Apapa Port, Lagos"
                     value={shippingDestination}
                     onChange={(e) => setShippingDestination(e.target.value)}
                     className="w-full bg-zinc-900 text-zinc-200 border border-zinc-800 focus:border-emerald-500 rounded px-3 py-1.5 focus:outline-none"

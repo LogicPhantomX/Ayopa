@@ -108,8 +108,8 @@ export default function SellerWorkspace({
       companyName: companyName || "West-African Grain Alliance",
       registrationNumber: registrationNumber || "WA-992112-L",
       taxId: taxId || "TX-882110",
-      country: country || "Ghana",
-      licenseDocumentName: licenseDocument || "TradeLicense-Ghana.pdf",
+      country: country || "Nigeria",
+      licenseDocumentName: licenseDocument || "CAC-Export-License-Nigeria.pdf",
       bankAccount: bankAccount || "Afriland First Bank - 991200",
     };
     onUpdateKyc(verifiedKyc);
@@ -332,7 +332,7 @@ export default function SellerWorkspace({
                       <input
                         type="text"
                         required
-                        placeholder="e.g., Ghana, Côte d'Ivoire, Zambia"
+                        placeholder="e.g., Nigeria, Ghana, Côte d’Ivoire"
                         value={country}
                         onChange={(e) => setCountry(e.target.value)}
                         className="w-full bg-zinc-900 border border-zinc-800 text-zinc-200 rounded px-2.5 py-1.5 focus:outline-none"
@@ -427,7 +427,7 @@ export default function SellerWorkspace({
                 <label className="text-zinc-400 block mb-1">Specific Origin Hub</label>
                 <input
                   type="text"
-                  placeholder="e.g., Zambia (Central Province)"
+                  placeholder="e.g., Kaduna (North-West Nigeria)"
                   value={origin}
                   onChange={(e) => setOrigin(e.target.value)}
                   className="w-full bg-zinc-900 border border-zinc-800 text-zinc-200 rounded px-2.5 py-1.5 focus:outline-none"

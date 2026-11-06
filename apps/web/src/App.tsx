@@ -14,22 +14,12 @@
 //
 // TopNav switches between them; each workspace manages its own auth gate.
 import React, { useState } from "react";
-import MarketplaceApp from "./components/marketplace/MarketplaceApp";
-import SellerPortal from "./components/seller/SellerPortal";
-import AdminPortal from "./components/admin/AdminPortal";
-import TopNav, { Route } from "./components/layout/TopNav";
+import DemoApp, { DemoRoute } from "./components/demo/DemoApp";
 
 export default function App() {
-  const [route, setRoute] = useState<Route>("marketplace");
+  const [route, setRoute] = useState<DemoRoute>("marketplace");
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "var(--color-paper)" }}>
-      <TopNav route={route} onChange={setRoute} />
-      <div className="flex-1">
-        {route === "marketplace" && <MarketplaceApp />}
-        {route === "seller" && <SellerPortal />}
-        {route === "admin" && <AdminPortal />}
-      </div>
-    </div>
+    <DemoApp route={route} onRouteChange={setRoute} />
   );
 }

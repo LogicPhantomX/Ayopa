@@ -34,7 +34,7 @@ const SEED_ACCOUNTS: StoredAccount[] = [
     password: "demo1234",
     role: "seller",
     companyName: "West-African Grain Alliance",
-    country: "Ghana",
+    country: "Nigeria",
     createdAt: new Date().toISOString(),
   },
   {

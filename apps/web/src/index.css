@@ -99,6 +99,29 @@ body {
   color: var(--color-zinc-100);
 }
 
+.ayopa-app {
+  background-image: radial-gradient(circle at 8% 0%, rgba(212, 160, 23, 0.055), transparent 28rem), radial-gradient(circle at 92% 18%, rgba(255, 255, 255, 0.025), transparent 24rem);
+}
+
+.ayopa-mark {
+  animation: markFloat 5s ease-in-out infinite;
+}
+
+.ayopa-live-dot {
+  animation: livePulse 2.2s ease-in-out infinite;
+}
+
+.ayopa-app button,
+.ayopa-app input,
+.ayopa-app select,
+.ayopa-app textarea {
+  transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+
+.ayopa-app button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
 /* Custom premium scrollbar styling */
 ::-webkit-scrollbar {
   width: 5px;
@@ -129,6 +152,16 @@ body {
 @keyframes slideUp {
   from { transform: translateY(16px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes markFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); box-shadow: 0 8px 24px rgba(212, 160, 23, 0.08); }
+  50% { transform: translateY(-2px) rotate(-2deg); box-shadow: 0 12px 30px rgba(212, 160, 23, 0.16); }
+}
+
+@keyframes livePulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.35); }
+  50% { opacity: 0.72; box-shadow: 0 0 0 5px rgba(52, 211, 153, 0); }
 }
 
 .no-scrollbar {
